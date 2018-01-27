@@ -1,6 +1,7 @@
 package com.frontline.newssummary.controller;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,24 +17,22 @@ public class MemberController {
 	@Inject
 	MemberService memberService;
 	
+	//회원가입
 	@RequestMapping("register")
 	String registerIndex() {
 		return "register";
 	}
 	
+	//헤더파일만 불러오고싶을때
 	@RequestMapping("navigation")
 	String navigation() {
 		return "navigation";
 	}
 	
-	@RequestMapping("rollingtest")
+	//테스트파일.지워도됨.
+	@RequestMapping("ListTest")
 	String rollingtestIndex() {
-		return "rollingtest";
-	}
-	
-	@RequestMapping("contact")
-	String cotIndex() {
-		return "contact";
+		return "ListTest";
 	}
 	
 	// 아이디/ 비밀번호 찾기
@@ -48,26 +47,7 @@ public class MemberController {
 		return "findLogin_check";
 	}
 	
-	@RequestMapping("chatTest")
-	String chatIndex() {
-		return "chatTest";
-	}
-	
-	@RequestMapping("broadcasting")
-	String chat2Index() {
-		return "broadcasting";
-	}
-	
-	@RequestMapping("login")
-	String showlogin() {
-		return "logins";
-	}
-	
-	@RequestMapping("wordcloud")
-	String showWordCloud() {
-		return "wordcloud";
-	}
-	
+			
 	@RequestMapping("join.do")
 	String showjoin() {
 		return "join";
@@ -79,13 +59,13 @@ public class MemberController {
 	}
 	
 	@RequestMapping("loginForm")
-	String gettingMember(MemberVO vo, Model model) {
-		model.addAttribute("login",memberService.getMember(vo)) ; 
+	String gettingMember(MemberVO vo, HttpSession session) {
 		System.out.println("진입"+vo.getId());
 		if(memberService.getMember(vo).getId().equals(vo.getId())) {
 			System.out.println("있어!");
+			session.setAttribute("LoginId", vo.getId());
 		}
-		return "broadcasting";
+		return "redirect:index";
 	}
 	
 	@RequestMapping("checkUser")

@@ -3,12 +3,20 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page session="true"%>
-<%@ page import="com.frontline.newssummary.vo.weatherVO"%>
-<%@ page import="com.frontline.newssummary.vo.rollingnewsVO"%>
+<%@ page import="com.frontline.newssummary.vo.RollingNewsVO"%>
+<%@ page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <!-- Navigation -->
+<%@include file="navigation.jsp" %>
+  	<!-- ./Navigation -->
+
   <head>
-    <script src="js/chat/rollingText.js"> </script>
+  <!-- rollingText script -->
+  <script src="js/chat/rollingText.js"> </script>
+  <script src = "js/chat/chatpagescript.js"></script>
+  
   <style type="text/css">
 		#rollingText .viewArea{height:20px;position:relative;overflow:hidden;}
 			#rollingText ul{position:absolute; top:0px;}
@@ -34,12 +42,7 @@
   </head>
 
   <body>
-
-    <!-- Navigation -->
-	<%@include file="navigation.jsp" %>
-  	<!-- ./Navigation -->
-
-    <!-- Page Content -->
+\    <!-- Page Content -->
     <div class="container">
 
       <!-- Page Heading/Breadcrumbs -->
@@ -99,30 +102,45 @@
         <input type="hidden" value='<%=session.getId().substring(0, 6)%>'
             id='chat_id' />
     </c:if>
-    <!--     채팅창 -->
-    <div id="_chatbox" style="border:2px solid #aaaaaa;border-radius: 15px; display: none">
-        <fieldset>
-                   <!-- rolling text -->
+    
+        
+        <!-- rolling text -->
 		<div id="rollingText">
 	<div class="viewArea">
 		<ul class="notice-list">
-			<li><a href="#">1. 규가츠 먹고싶었따.</a></li>
-			<li><a href="#">2. 스테이크 덮밥은 맛있따.</a></li>
+		<%
+	List<RollingNewsVO> Rnewslist = (List<RollingNewsVO>) request.getAttribute("rollingNewsList");
+		for(int i = 0; (Rnewslist != null) && i < 12; i++){
+			String active = "active";
+			RollingNewsVO rnvo = (RollingNewsVO) Rnewslist.get(i);
+		%>
+			<li><a href="<%=rnvo.getUrl()%>"><%=rnvo.getTitle()%></a></li>
+			<% } %>
 		</ul>
 	</div>
 	<div class="control fl">
 		<a href="#" class="play">재생</a>
 		<a href="#" class="stop">정지</a>
-	</div>
+	
   		<span id="bt5">
 			<a href="#" class="prev">이전</a>
 			<a href="#" class="next">다음</a>
 		</span>
-</div>
+</div></div>
 	<script type="text/javascript">fn_article3('rollingText','bt5',true);</script>
 		<!-- ./rolling text -->
+    
+    
+    
+    <!--     채팅창 -->
+    <div id="_chatbox" style="border:2px solid #aaaaaa;border-radius: 15px; display: none">
+
+    
+    
+        <fieldset>
+
        
-            <div  id="messageWindow" style="height:80%; overflow: scroll;" ></div >
+            <div  id="messageWindow" style="height:70%; overflow: scroll;" ></div >
             <div style="text-align:center;">
             
             <br /> <input id="inputMessage" type="text"/>
@@ -153,7 +171,6 @@
     <!-- Do not edit these files! In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
     <script src="js/jqBootstrapValidation.js"></script>
     <script src="js/contact_me.js"></script>
-
   </body>
 <script>
     $(".chat").on({
@@ -167,75 +184,5 @@
             }
         }
     });
-</script>
-<script type="text/javascript">
-    var textarea = document.getElementById("messageWindow");
-    var webSocket = new WebSocket('ws://211.107.78.186:8080/contact');
-    var inputMessage = document.getElementById('inputMessage');
-    webSocket.onerror = function(event) {
-        onError(event)
-    };
-    webSocket.onopen = function(event) {
-        onOpen(event)
-    };
-    webSocket.onmessage = function(event) {
-        onMessage(event)
-    };
-    function onMessage(event) {
-        var message = event.data.split("|");
-        var sender = message[0];
-        var content = message[1];
-        if (content == "") {
-            
-        } else {
-            if (content.match("/")) {
-                if (content.match(("/" + $("#chat_id").val()))) {
-                    var temp = content.replace("/" + $("#chat_id").val(), "(귓속말) :").split(":");
-                    if (temp[1].trim() == "") {
-                    } else {
-                        $("#messageWindow").html($("#messageWindow").html() + "<p class='whisper'>"
-                            + sender + content.replace("/" + $("#chat_id").val(), "(귓속말) :") + "</p>");
-                    }
-                } else {
-                }
-            } else {
-                if (content.match("!")) {
-                    $("#messageWindow").html($("#messageWindow").html()
-                        + "<p class='chat_content'><b class='impress'>" + sender + " : " + content + "</b></p>");
-                } else {
-                    $("#messageWindow").html($("#messageWindow").html()
-                        + "<p class='chat_content'>" + sender + " : " + content + "</p>");
-                }
-            }
-        }
-    }
-    function onOpen(event) {
-        $("#messageWindow").html("<p class='chat_content'>채팅에 참여하였습니다.</p>");
-    }
-    function onError(event) {
-        alert(event.data);
-    }
-    function send() {
-        if (inputMessage.value == "") {
-        } else {
-            $("#messageWindow").html($("#messageWindow").html()
-                + "<p class='chat_content'>나 : " + inputMessage.value + "</p>");
-        }
-        webSocket.send($("#chat_id").val() + "|" + inputMessage.value);
-        inputMessage.value = "";
-    }
-    //     엔터키를 통해 send함
-    $("#inputMessage").keyup(function(e){ 
-        var code = e.which; 
-        if(code==13)e.preventDefault();
-        if(code==13){
-            send();
-        } 
-    });
-    //     채팅이 많아져 스크롤바가 넘어가더라도 자동적으로 스크롤바가 내려가게함
-    window.setInterval(function() {
-        var elem = document.getElementById('messageWindow');
-        elem.scrollTop = elem.scrollHeight;
-    }, 0);
 </script>
 </html>

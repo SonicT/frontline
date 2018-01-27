@@ -9,26 +9,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.frontline.newssummary.Service.ReplyService;
-import com.frontline.newssummary.vo.ReplyVO;
+import com.frontline.newssummary.Service.SummaryService;
 
 @RestController
 @RequestMapping("/replies")
 public class ReplyController {
 
 	@Inject
-	private ReplyService service;
+	private SummaryService service;
 	
-	@RequestMapping(value="",method=RequestMethod.POST)
-	public ResponseEntity<String> register(@RequestBody ReplyVO vo){
-		ResponseEntity<String> entity = null;
-		try {
-			service.create(vo);
-			entity = new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	}
+//	@RequestMapping(value="",method=RequestMethod.POST)
+//	public ResponseEntity<String> register(@RequestBody ReplyVO vo){
+//		ResponseEntity<String> entity = null;
+//		try {
+//			service.create(vo);
+//			entity = new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			entity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+//		}
+//		return entity;
+//	}
 }

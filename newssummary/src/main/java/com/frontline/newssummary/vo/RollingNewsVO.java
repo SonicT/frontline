@@ -1,8 +1,9 @@
 package com.frontline.newssummary.vo;
 
-public class rollingnewsVO {
+public class RollingNewsVO {
 	private String title;
 	private String url;
+	
 	public String getTitle() {
 		return title;
 	}
@@ -15,7 +16,4 @@ public class rollingnewsVO {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
-
 }

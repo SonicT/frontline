@@ -16,7 +16,12 @@
 <div id="rollingText">
 	<div class="viewArea">
 		<ul class="notice-list">
-			<li><a href="#">1. '보코' 손승연, 美 버클리 음대 합격 "버클리도 반했다"</a></li>
+			<li><a href="#">1. 안</a></li>
+			<li><a href="#">2. 녕</a></li>
+			<li><a href="#">3. 여</a></li>
+			<li><a href="#">4. 러</a></li>
+			<li><a href="#">5. 분</a></li>
+			
 		</ul>
 	</div>
 	<div class="control fl">

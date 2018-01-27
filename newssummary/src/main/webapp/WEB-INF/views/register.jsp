@@ -23,7 +23,6 @@
 	    var id = $('#userID').val();
 	        //ajax : jquery안에 포함되어있는 것
 	        
-	        
 	        $.ajax({
 	            type : 'POST',
 	            url : 'checkUser', //여기로 가서 function을 실행할꺼에요

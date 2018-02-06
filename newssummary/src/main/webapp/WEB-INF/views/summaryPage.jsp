@@ -4,10 +4,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page session="true"%>
 <%@ page import="com.frontline.newssummary.vo.RollingNewsVO"%>
+<%@ page import="com.frontline.newssummary.vo.SummaryVO"%>
+<%@ page import="com.frontline.newssummary.vo.SummaryListVO"%>
+<%@ page import="com.frontline.newssummary.vo.MemberVO" %>
 <%@ page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
     <!-- Navigation -->
 <%@include file="navigation.jsp" %>
   	<!-- ./Navigation -->
@@ -15,7 +17,7 @@
   <head>
   <!-- rollingText script -->
   <script src="js/chat/rollingText.js"> </script>
-  <script src = "js/chat/chatpagescript.js"></script>
+
   
   <style type="text/css">
 		#rollingText .viewArea{height:20px;position:relative;overflow:hidden;}
@@ -23,7 +25,6 @@
 			#rollingText .control a.on {color:red;}
 </style>
    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -42,40 +43,116 @@
   </head>
 
   <body>
-\    <!-- Page Content -->
+    <!-- Page Content -->
     <div class="container">
-
+        <%
+        SummaryListVO selectedSummary = (SummaryListVO) request.getAttribute("selectedSummary");
+		%>
       <!-- Page Heading/Breadcrumbs -->
-      <h1 class="mt-4 mb-3">기사아
-        <small>제목</small>
-      </h1>
+      <h1 class="mt-4 mb-3"><%=selectedSummary.getTitle() %></h1>
       
 		<div class=row>
       <div class="col-lg-8" id="summaryContent">
-          	<h3>요약문이다</h3>
+      		<img src="<%=selectedSummary.getImg() %>">
+          	<h3><%=selectedSummary.getContent() %></h3>
           
-          	<br/>
-          	<p>피카츄</p>
-          	<p>라이츄</p>
-          	<p>파이리</p>
-          	<p>꼬부기</p>
-     
         <!-- Map Column -->
         <h3>사용자 요약문</h3>
         <p>피카츄 너로정햇닷!</p>
      
       <!-- /.row -->
 
-      <!-- Contact Form -->
-      <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
       
           <h3>사용자 요약문 작성칸</h3>
+          
+          <!-- sentReply test -->
+          
+          
+    	<input type="hidden" id="board_id" name="board_id" value="${boardView.id}" />
+    	<div align="center">
+    		</br>
+    		</br>
+   			<table border="1" width="1200px" >
+   				<tr>
+   					<td colspan="2" align="right">
+   						<input type="password" id="password" name="password" style="width:200px;" maxlength="10" placeholder="패스워드"/>
+   						<button id="modify" name="modify">글 수정</button>
+   						<button id="delete" name="delete">글 삭제</button>
+   					</td>
+   				</tr>
+   				<tr>
+   					<td width="900px">
+						제목: ${boardView.subject}
+					</td>
+					<td>
+						작성자: ${boardView.writer}
+					</td>
+   				</tr>
+   				<tr height="500px">
+   					<td colspan="2" valign="top">
+   						${boardView.content}
+   					</td>
+   				</tr>
+   			</table>
+   			<table border="1" width="1200px" id="reply_area">
+   				<tr reply_type="all"><!-- 뒤에 댓글 붙이기 쉽게 선언 -->
+   					<td colspan="4"></td>
+   				</tr>
+	   			<!-- 댓글이 들어갈 공간 -->
+	   			<c:forEach var="replyList" items="${replyList}" varStatus="status">
+					<tr reply_type="<c:if test="${replyList.depth == '0'}">main</c:if><c:if test="${replyList.depth == '1'}">sub</c:if>"><!-- 댓글의 depth 표시 -->
+			    		<td width="870px">
+			    			<c:if test="${replyList.depth == '1'}"> → </c:if>${replyList.reply_content}
+			    		</td>
+			    		<td width="100px">
+			    			${replyList.reply_writer}
+			    		</td>
+			    		<td width="100px">
+			    			<input type="password" id="reply_password_${replyList.reply_id}" style="width:100px;" maxlength="10" placeholder="패스워드"/>
+			    		</td>
+			    		<td>
+			    			<button name="reply_del" reply_id = "${replyList.reply_id}">삭제</button>
+			    			<c:if test="${replyList.depth != '1'}">
+			    				<button name="reply_reply" reply_id = "${replyList.reply_id}">댓글</button><!-- 첫 댓글에만 댓글이 추가 대댓글 불가 -->
+			    			</c:if>
+			    		</td>
+			    	</tr>
+			    </c:forEach>
+   			</table>
+   			<table border="1" width="1200px" bordercolor="#46AA46">
+   				<tr>
+   					<td width="500px">
+						이름: <input type="text" id="reply_writer" name="reply_writer" style="width:170px;" maxlength="10" placeholder="작성자"/>
+						패스워드: <input type="password" id="reply_password" name="reply_password" style="width:170px;" maxlength="10" placeholder="패스워드"/>
+						<button id="reply_save" name="reply_save">댓글 등록</button>
+					</td>
+   				</tr>
+   				<tr>
+   					<td>
+   						<textarea id="reply_content" name="reply_content" rows="4" cols="50" placeholder="댓글을 입력하세요."></textarea>
+   					</td>
+   				</tr>
+   			</table>
+   			<table width="1200px">
+   				<tr>
+   					<td align="right">
+   						<button id="list" name="list">게시판</button>
+   					</td>
+   				</tr>
+   			</table>
+    	</div>
+    	
+    	<!--  ./sendReplyTest end -->
+          
+          
+          
+          
           <form name="sentMessage" id="contactForm" novalidate>
             <div class="control-group form-group">
               <div class="controls">
                 <label>Full Name:</label>
-                <input type="text" class="form-control" id="userid" required data-validation-required-message="Please enter your name.">
-                <p class="help-block"></p>	
+                <input type="text" class="form-control" id="userid" value="멤버VO가져와야겠다.">
+                <p class="help-block"></p>
               </div>
             </div>
             <div class="control-group form-group">
@@ -90,8 +167,7 @@
             <br/>
           </form>
 		</div>
-		
-		<!-- chatting div -->
+		<!-- chatting and rollingTest div -->
 		<div class="col-md-4" id="summaryContent">
 				
 		    <!-- 로그인한 상태일 경우와 비로그인 상태일 경우의 chat_id설정 -->
@@ -102,8 +178,6 @@
         <input type="hidden" value='<%=session.getId().substring(0, 6)%>'
             id='chat_id' />
     </c:if>
-    
-        
         <!-- rolling text -->
 		<div id="rollingText">
 	<div class="viewArea">
@@ -130,28 +204,21 @@
 	<script type="text/javascript">fn_article3('rollingText','bt5',true);</script>
 		<!-- ./rolling text -->
     
-    
-    
     <!--     채팅창 -->
     <div id="_chatbox" style="border:2px solid #aaaaaa;border-radius: 15px; display: none">
-
-    
-    
         <fieldset>
-
-       
             <div  id="messageWindow" style="height:70%; overflow: scroll;" ></div >
             <div style="text-align:center;">
-            
-            <br /> <input id="inputMessage" type="text"/>
+            <input id="inputMessage" type="text"/>
             <input type="submit" value="send" onclick="send()" />
-            <br />
             </div>
         </fieldset>
     </div>
+    
     <img class="chat" src="img/chat.png" />
 		</div><!-- /.chatting div -->
       <!-- /.row -->
+      
     </div>
     <!-- /.container -->
 	</div>
@@ -171,6 +238,7 @@
     <!-- Do not edit these files! In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
     <script src="js/jqBootstrapValidation.js"></script>
     <script src="js/contact_me.js"></script>
+    <script src = "js/chat/chatpagescript.js"></script>
   </body>
 <script>
     $(".chat").on({

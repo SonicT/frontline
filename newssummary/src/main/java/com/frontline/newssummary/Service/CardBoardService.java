@@ -1,7 +1,6 @@
 package com.frontline.newssummary.Service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.frontline.newssummary.dao.MainSummaryListDAO;
 import com.frontline.newssummary.vo.MainSummaryListVO;
+import com.frontline.newssummary.vo.SummaryListVO;
 
 @Service
 public class CardBoardService {
@@ -19,6 +19,11 @@ public class CardBoardService {
 	public List<MainSummaryListVO> getMainSummaryList (MainSummaryListVO vo){
 		MainSummaryListDAO dao = sqlSession.getMapper(MainSummaryListDAO.class);
 		return dao.getMainSummaryList(vo);
+	}
+	
+	public List<SummaryListVO> getPoliticsSummaryList (SummaryListVO vo){
+		MainSummaryListDAO dao = sqlSession.getMapper(MainSummaryListDAO.class);
+		return dao.getPoliticsSummaryList(vo);
 	}
 	
 	public MainSummaryListVO getMainSummary (MainSummaryListVO vo) {

@@ -192,8 +192,8 @@ function fn_replyReplySave(){
 		<div id="replyDialog" style="width: 99%; display:none">
 			<form name="form3" action="board6ReplySave" method="post">
 				<input type="hidden" name="brdno" value="<c:out value="${boardInfo.brdno}"/>"> 
-				<input type="hidden" name="reno"> 
-				<input type="hidden" name="reparent"> 
+				<input type="hidden" name="reno">
+				<input type="hidden" name="reparent">
 				작성자: <input type="text" name="rewriter" size="20" maxlength="20"> <br/>
 				<textarea name="rememo" rows="3" cols="60" maxlength="500"></textarea>
 				<a href="#" onclick="fn_replyReplySave()">저장</a>

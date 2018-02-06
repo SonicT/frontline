@@ -29,15 +29,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="listview" items="${listview}" varStatus="status">	
+		
+	 			<c:forEach var="listview" items="${listview}" varStatus="status">	
 				<c:url var="link" value="board2Read">
 					<c:param name="brdno" value="${listview.brdno}" />
-				</c:url>		
+				</c:url> 
 										  				
 				<tr>
-					<td>
-						<c:out value="${pageVO.totRow-((pageVO.page-1)*pageVO.displayRowCount + status.index)}"/>					
-					</td>
+					<td><c:out value="${pageVO.totRow-((pageVO.page-1)*pageVO.displayRowCount + status.index)}"/></td>
 					<td><a href="${link}"><c:out value="${listview.brdtitle}"/></a></td>
 					<td><c:out value="${listview.brdwriter}"/></td>
 					<td><c:out value="${listview.brddate}"/></td>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.frontline.newssummary.Service.CardBoardService;
 import com.frontline.newssummary.vo.MainSummaryListVO;
+import com.frontline.newssummary.vo.SummaryListVO;
 
 @Controller
 public class CardBoardController {
@@ -25,5 +26,14 @@ public class CardBoardController {
 			request.setAttribute("list", MainSummarylist);
 		}
 		return"index";
+	}
+	
+	@RequestMapping("politics")
+	String politics(SummaryListVO slvo, HttpServletRequest request) {
+		List<SummaryListVO> Summarylist = cardBoardService.getPoliticsSummaryList(slvo);
+		if(Summarylist !=null) {
+			request.setAttribute("list", Summarylist);
+		}
+		return"ListIndex";
 	}
 }
